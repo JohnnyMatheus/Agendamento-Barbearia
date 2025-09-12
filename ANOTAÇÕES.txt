@@ -1,3 +1,19 @@
 https://ui.shadcn.com/
 
 https://supabase.com/ui
+
+https://nextjs.org/docs/pages/api-reference/cli/create-next-app
+
+instalar o pnpm usando o npm
+	npm i -g pnpm
+
+
+
+criar o projeto 
+	npx create-next-app@latest [project-name] [options]
+	npx create-next-app@latest sistema-agendamento --use-pnpm
+ 
+
+
+rodar o projeto
+pnpm run dev
