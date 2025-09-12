@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, Scissors, Twitter } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
           <span className="text-2xl font-bold tracking-tight">Barbers</span>
         </div>
 
-        {/* Social Media Icons (right) */}
+        {/* Social Media Icons (right) + Login */}
         <div className="flex items-center gap-3">
           {[Facebook, Instagram, Twitter].map((Icon, idx) => (
             <button
@@ -24,6 +25,14 @@ export default function Home() {
               <Icon className="h-4 w-4" />
             </button>
           ))}
+          <Link href="/barbeiro/login" className="ml-2">
+            <Button
+              variant="outline"
+              className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black h-9 px-4"
+            >
+              Login
+            </Button>
+          </Link>
         </div>
       </header>
 
@@ -44,12 +53,14 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              size="lg"
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-3 rounded-lg shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-all"
-            >
-              Agendar
-            </Button>
+            <Link href="/agendar">
+              <Button
+                size="lg"
+                className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-3 rounded-lg shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-all"
+              >
+                Agendar
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="lg"
