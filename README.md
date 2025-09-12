@@ -1,3 +1,9 @@
+<h1 align="center">Programação IV Sistema de Agendamento de Barbearia</h1>
+
+## <p align="center">👨🏽‍🎓Nome completo: Johnny Matheus Nogueira de Medeiro</p>
+## <p align="center">🏫Turma: Ciências da Computação UNOESC - São Miguel do Oeste</p>
+<hr>
+
 
 ## 💈Descrição do projeto
 
