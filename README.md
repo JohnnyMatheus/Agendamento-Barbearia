@@ -39,15 +39,6 @@
  <img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/TELA%205.png"/>
 </p>
 
-<h2 align="center">📺TELA 5</h2>
-<p align="center">
- <img src=""/>
-</p>
-
-<h2 align="center">📺TELA 6</h2>
-<p align="center">
- <img src=""/>
-</p>
 
 
 ## 🧠 Desenvolvedor
