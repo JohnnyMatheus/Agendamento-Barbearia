@@ -29,3 +29,6 @@ INSTALAR Rules for AI Code Editors for Supabase
 
 
 INSTALAR SISTEMA DE AUTENTICAÇÃO 
+
+
+pnpm run dev
