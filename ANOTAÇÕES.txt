@@ -17,3 +17,6 @@ criar o projeto
 
 rodar o projeto
 pnpm run dev
+
+
+instalar a biblioteca do shadcn
