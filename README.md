@@ -2,8 +2,12 @@
 
 ## <p align="center">👨🏽‍🎓Nome completo: Johnny Matheus Nogueira de Medeiro</p>
 ## <p align="center">🏫Turma: Ciências da Computação UNOESC - São Miguel do Oeste</p>
+<hr />
+<h1> Observações </h1>
+<p>Login: alunoti@barbers.app   senha: informatica
+<p>Link: https://agendamento-barbearia-qg1d.vercel.app/</p>
+  
 <hr>
-
 
 ## 💈Descrição do projeto
 
@@ -18,6 +22,9 @@
 | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Html.png" width=115><br><sub>Html5</sub>](URL_LINK_1) | [<img src = "https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Css.png" width=115><br><sub>CSS3</sub>](URL_LINK_2) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/nextjs.jpg" width=115><br><sub>NextJS</sub>](URL_LINK_3) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Gitdesktop.png" width=115><br><sub>GitDesktop</sub>](URL_LINK_4) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Cursor.jpg" width=115><br><sub>Cursor</sub>](URL_LINK_5) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/supabase.png" width=115><br><sub>SupaBase</sub>](URL_LINK_6) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/shadcn.png" width=115><br><sub>Shadcn</sub>](URL_LINK_7) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/typescript.png" width=115><br><sub>TypeScript</sub>](URL_LINK_8) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/vercel.png" width=115><br><sub>Vercel</sub>](URL_LINK_9) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 <hr>
+
+## 💈Demonstração
+<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/video.gif"/>
 
 <h2 align="center">🎲Banco de Dados ER🎲</h2>
 <p align="center">
