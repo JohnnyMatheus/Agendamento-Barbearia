@@ -8,12 +8,7 @@
 
 <h2 align="center">🛠️Ferramentas Utilizadas</h2>
 
-|
-<br><sub>Next.js</sub> |
-<br><sub>TypeScript</sub> |
-<br><sub>Shadcn</sub> |
-<br><sub>Supabase</sub> |
-<br><sub>GitHub Desktop</sub> |
-<br><sub>Cursor</sub> |
 
-| :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Html.png" width=115><br><sub>Html5</sub>](URL_LINK_1) | [<https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Css.png" width=115><br><sub>CSS3</sub>](URL_LINK_2) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/nextjs.jpg" width=115><br><sub>NextJS</sub>](URL_LINK_3) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Gitdesktop.png" width=115><br><sub>GitDesktop</sub>](URL_LINK_4) | [<img src="https://github.com/JohnnyMatheus/Agendamento-Barbearia/blob/main/IMAGENS/Cursor.jpg" width=115><br><sub>Cursor</sub>](URL_LINK_5) | [<img src="https://github.com/JohnnyMatheus/Sistema-Gerenciamento-para-Barbearia/blob/main/Imagens/Dbeaver.png" width=115><br><sub>Dbeaver</sub>](URL_LINK_6) | [<img src="https://github.com/JohnnyMatheus/Sistema-Gerenciamento-para-Barbearia/blob/main/Imagens/Codeigniter4.png" width=115><br><sub>Codeigniter4</sub>](URL_LINK_7) | [<img src="https://github.com/JohnnyMatheus/Sistema-Gerenciamento-para-Barbearia/blob/main/Imagens/Gitdesktop.png" width=115><br><sub>Gitdesktop</sub>](URL_LINK_8) | [<img src="https://github.com/JohnnyMatheus/Sistema-Gerenciamento-para-Barbearia/blob/main/Imagens/Xampp.png" width=115><br><sub>Xampp</sub>](URL_LINK_9) | [<img src="https://github.com/JohnnyMatheus/Sistema-Gerenciamento-para-Barbearia/blob/main/Imagens/Vscode.png" width=115><br><sub>VSCode</sub>](URL_LINK_10) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+<hr>
