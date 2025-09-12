@@ -1,0 +1,286 @@
+---
+alwaysApply: true
+description: Regras de front-end para sistema de agendamento de barbearia
+---
+
+# Frontend Guidelines - Sistema de Agendamento de Barbearia
+
+## Stack Tecnológica
+
+**Framework Principal:**
+
+- Next.js 15.5.3 com App Router
+- React 19.1.0
+- TypeScript 5
+
+**Estilização:**
+
+- Tailwind CSS 4 (configuração moderna)
+- Radix UI para componentes acessíveis
+- Lucide React para ícones
+
+**Ferramentas de Desenvolvimento:**
+
+- ESLint para linting
+- Turbopack para build otimizado
+
+## Estrutura de Arquivos
+
+```
+src/
+├── app/                    # App Router do Next.js
+│   ├── globals.css        # Estilos globais e tema
+│   ├── layout.tsx         # Layout raiz
+│   └── page.tsx           # Página inicial
+├── components/            # Componentes reutilizáveis
+│   └── ui/               # Componentes base (Radix UI)
+└── lib/                  # Utilitários e configurações
+    └── utils.ts          # Funções utilitárias
+```
+
+## Padrões de Design
+
+### Paleta de Cores
+
+- **Primária:** Preto (#000000) - Fundo principal
+- **Secundária:** Branco (#FFFFFF) - Texto principal
+- **Acento:** Amarelo/Dourado (#EAB308) - CTAs e destaques
+- **Neutras:** Cinzas para textos secundários
+
+### Tipografia
+
+- **Fonte Principal:** Geist Sans (via Google Fonts)
+- **Fonte Mono:** Geist Mono (para código)
+- **Hierarquia:** text-5xl, text-4xl, text-3xl, text-2xl, text-xl, text-lg, text-base
+
+### Espaçamento
+
+- **Padding:** px-6, py-4, p-8 (padrão)
+- **Margin:** mb-6, mb-8, gap-4, gap-8
+- **Responsivo:** lg:px-12, sm:flex-row
+
+## Componentes e Padrões
+
+### Botões
+
+```tsx
+// Botão primário (amarelo)
+<Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-3 rounded-lg transition-colors">
+  Agendar
+</Button>
+
+// Botão outline (borda amarela)
+<Button variant="outline" className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black font-semibold px-8 py-3 rounded-lg transition-colors">
+  Entre em contato
+</Button>
+```
+
+### Layout Responsivo
+
+- **Mobile First:** Sempre começar com mobile
+- **Breakpoints:** sm: (640px), lg: (1024px)
+- **Grid:** Usar flexbox e grid do Tailwind
+- **Imagens:** Sempre usar Next.js Image com fill e object-cover
+
+### Ícones
+
+- **Biblioteca:** Lucide React
+- **Tamanhos:** h-4 w-4, h-5 w-5, h-6 w-6, h-8 w-8
+- **Cores:** text-yellow-500 para acentos, text-white para neutros
+
+## Convenções de Código
+
+### Nomenclatura
+
+- **Componentes:** PascalCase (ex: `BarberCard`)
+- **Arquivos:** kebab-case (ex: `barber-card.tsx`)
+- **Variáveis:** camelCase (ex: `isLoading`)
+- **Constantes:** UPPER_SNAKE_CASE (ex: `API_BASE_URL`)
+
+### TypeScript
+
+- **Interfaces:** Prefixo `I` (ex: `IUser`)
+- **Types:** PascalCase (ex: `UserRole`)
+- **Props:** Sufixo `Props` (ex: `ButtonProps`)
+
+### Imports
+
+```tsx
+// Ordem dos imports
+import React from "react";
+import { NextPage } from "next";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Scissors } from "lucide-react";
+import { cn } from "@/lib/utils";
+```
+
+## Acessibilidade
+
+### Semântica HTML
+
+- Usar tags semânticas: `<header>`, `<main>`, `<section>`, `<article>`
+- Headings hierárquicos: h1 → h2 → h3
+- Labels para formulários
+- Alt text para imagens
+
+### ARIA
+
+- `aria-label` para botões sem texto
+- `aria-expanded` para dropdowns
+- `role` quando necessário
+
+### Navegação
+
+- Tab order lógico
+- Focus visible
+- Skip links para conteúdo principal
+
+## Performance
+
+### Otimizações
+
+- **Imagens:** Next.js Image com lazy loading
+- **Fonts:** Google Fonts com display=swap
+- **Bundle:** Usar dynamic imports para componentes pesados
+- **CSS:** Tailwind CSS com purging automático
+
+### Core Web Vitals
+
+- **LCP:** Otimizar imagens e fontes
+- **FID:** Minimizar JavaScript bloqueante
+- **CLS:** Evitar mudanças de layout
+
+## Estado e Dados
+
+### Gerenciamento de Estado
+
+- **Local:** useState para estado simples
+- **Global:** Context API para estado compartilhado
+- **Server:** Server Components quando possível
+- **Forms:** Controlled components
+
+### Fetching de Dados
+
+- **Server:** Server Components com async/await
+- **Client:** useEffect + fetch ou SWR
+- **Cache:** Next.js cache automático
+
+## Formulários
+
+### Validação
+
+- **Client-side:** Validação em tempo real
+- **Server-side:** Validação no backend
+- **Feedback:** Mensagens claras de erro
+
+### UX
+
+- **Loading states:** Spinners e disabled states
+- **Success states:** Confirmações visuais
+- **Error handling:** Mensagens de erro amigáveis
+
+## Responsividade
+
+### Breakpoints
+
+```css
+/* Mobile First */
+sm: 640px   /* Small devices */
+md: 768px   /* Medium devices */
+lg: 1024px  /* Large devices */
+xl: 1280px  /* Extra large devices */
+2xl: 1536px /* 2X large devices */
+```
+
+### Padrões
+
+- **Mobile:** Stack vertical, padding reduzido
+- **Tablet:** Layout híbrido, mais espaçamento
+- **Desktop:** Layout completo, sidebars
+
+## Temas e Modo Escuro
+
+### Configuração
+
+- **Base:** Modo escuro por padrão
+- **Cores:** Definidas no globals.css
+- **Transições:** transition-colors para mudanças suaves
+
+### Implementação
+
+```tsx
+// Usar classes condicionais
+className={`${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}
+
+// Ou usar variáveis CSS
+className="bg-background text-foreground"
+```
+
+## Testes
+
+### Estrutura
+
+- **Unit:** Jest + Testing Library
+- **Integration:** Cypress ou Playwright
+- **E2E:** Testes de fluxo completo
+
+### Padrões
+
+- **Naming:** describe('ComponentName', () => {})
+- **Coverage:** Mínimo 80% para componentes críticos
+- **Mocking:** Mock de APIs e contextos
+
+## Deploy e Build
+
+### Scripts
+
+```json
+{
+  "dev": "next dev --turbopack",
+  "build": "next build --turbopack",
+  "start": "next start",
+  "lint": "eslint"
+}
+```
+
+### Otimizações
+
+- **Turbopack:** Para desenvolvimento mais rápido
+- **Bundle Analysis:** Analisar tamanho do bundle
+- **Environment:** Variáveis de ambiente para diferentes ambientes
+
+## Padrões Específicos do Projeto
+
+### Barbearia
+
+- **Cores:** Preto, branco, dourado
+- **Ícones:** Tesouras, estrelas, redes sociais
+- **Imagens:** Barbeiros, equipamentos, ambiente
+- **Textos:** Português brasileiro, tom profissional
+
+### Agendamento
+
+- **Calendário:** Interface intuitiva
+- **Horários:** Disponibilidade clara
+- **Serviços:** Lista de serviços com preços
+- **Confirmação:** Feedback visual claro
+
+## Checklist de Qualidade
+
+### Antes do Commit
+
+- [ ] Código lintado sem erros
+- [ ] TypeScript sem erros
+- [ ] Componentes responsivos
+- [ ] Acessibilidade básica
+- [ ] Performance otimizada
+- [ ] Testes passando
+
+### Code Review
+
+- [ ] Seguindo padrões estabelecidos
+- [ ] Reutilização de componentes
+- [ ] Performance considerada
+- [ ] Acessibilidade verificada
+- [ ] Documentação atualizada

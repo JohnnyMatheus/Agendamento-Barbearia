@@ -1,0 +1,719 @@
+---
+description: Padrões específicos para o sistema de agendamento de barbearia
+---
+
+# Sistema de Agendamento - Padrões e Componentes
+
+## Estrutura de Dados
+
+### Tipos TypeScript
+
+```typescript
+// Tipos principais do sistema
+interface Barber {
+  id: string;
+  name: string;
+  specialty: string;
+  rating: number;
+  image: string;
+  bio: string;
+  isAvailable: boolean;
+  workingHours: WorkingHours;
+}
+
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: number; // em minutos
+  category: "haircut" | "beard" | "combo" | "other";
+  isPopular: boolean;
+}
+
+interface Appointment {
+  id: string;
+  barberId: string;
+  serviceId: string;
+  customerId: string;
+  date: string; // ISO date
+  time: string; // HH:MM format
+  status: "pending" | "confirmed" | "cancelled" | "completed";
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface WorkingHours {
+  monday: TimeSlot[];
+  tuesday: TimeSlot[];
+  wednesday: TimeSlot[];
+  thursday: TimeSlot[];
+  friday: TimeSlot[];
+  saturday: TimeSlot[];
+  sunday: TimeSlot[];
+}
+
+interface TimeSlot {
+  start: string; // HH:MM
+  end: string; // HH:MM
+  isAvailable: boolean;
+}
+```
+
+## Componentes de Agendamento
+
+### BookingFlow
+
+```tsx
+interface BookingFlowProps {
+  onComplete: (appointment: Appointment) => void;
+  onCancel: () => void;
+}
+
+export function BookingFlow({ onComplete, onCancel }: BookingFlowProps) {
+  const [step, setStep] = useState(1);
+  const [selectedBarber, setSelectedBarber] = useState<Barber | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
+  const steps = [
+    { id: 1, title: "Escolher Barbeiro", component: BarberSelection },
+    { id: 2, title: "Selecionar Serviço", component: ServiceSelection },
+    { id: 3, title: "Escolher Data", component: DateSelection },
+    { id: 4, title: "Escolher Horário", component: TimeSelection },
+    { id: 5, title: "Confirmar Agendamento", component: Confirmation },
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      {/* Progress Bar */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          {steps.map((stepItem, index) => (
+            <div key={stepItem.id} className="flex items-center">
+              <div
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
+                  step >= stepItem.id
+                    ? "bg-yellow-500 text-black"
+                    : "bg-muted text-muted-foreground"
+                )}
+              >
+                {stepItem.id}
+              </div>
+              {index < steps.length - 1 && (
+                <div
+                  className={cn(
+                    "w-16 h-1 mx-2",
+                    step > stepItem.id ? "bg-yellow-500" : "bg-muted"
+                  )}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+        <h2 className="text-2xl font-bold mt-4">{steps[step - 1].title}</h2>
+      </div>
+
+      {/* Step Content */}
+      <div className="min-h-[400px]">
+        {step === 1 && (
+          <BarberSelection
+            selectedBarber={selectedBarber}
+            onSelect={setSelectedBarber}
+            onNext={() => setStep(2)}
+          />
+        )}
+        {/* Outros steps... */}
+      </div>
+
+      {/* Navigation */}
+      <div className="flex justify-between mt-8">
+        <Button
+          variant="outline"
+          onClick={step > 1 ? () => setStep(step - 1) : onCancel}
+        >
+          {step > 1 ? "Voltar" : "Cancelar"}
+        </Button>
+        <Button onClick={handleNext} disabled={!canProceed}>
+          {step === steps.length ? "Confirmar" : "Próximo"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+### BarberSelection
+
+```tsx
+interface BarberSelectionProps {
+  selectedBarber: Barber | null;
+  onSelect: (barber: Barber) => void;
+  onNext: () => void;
+}
+
+export function BarberSelection({
+  selectedBarber,
+  onSelect,
+  onNext,
+}: BarberSelectionProps) {
+  const [barbers, setBarbers] = useState<Barber[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {barbers.map((barber) => (
+          <div
+            key={barber.id}
+            className={cn(
+              "bg-card rounded-lg p-6 border-2 cursor-pointer transition-all hover:shadow-lg",
+              selectedBarber?.id === barber.id
+                ? "border-yellow-500 bg-yellow-500/5"
+                : "border-border hover:border-yellow-500/50"
+            )}
+            onClick={() => onSelect(barber)}
+          >
+            <div className="relative mb-4">
+              <Image
+                src={barber.image}
+                alt={barber.name}
+                width={200}
+                height={200}
+                className="w-full h-48 object-cover rounded-lg"
+              />
+              {!barber.isAvailable && (
+                <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-semibold">Indisponível</span>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">{barber.name}</h3>
+              <p className="text-muted-foreground text-sm">
+                {barber.specialty}
+              </p>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                <span className="text-sm font-medium">{barber.rating}</span>
+              </div>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {barber.bio}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Button onClick={onNext} disabled={!selectedBarber} className="w-full">
+        Continuar
+      </Button>
+    </div>
+  );
+}
+```
+
+### ServiceSelection
+
+```tsx
+interface ServiceSelectionProps {
+  selectedService: Service | null;
+  onSelect: (service: Service) => void;
+  onNext: () => void;
+}
+
+export function ServiceSelection({
+  selectedService,
+  onSelect,
+  onNext,
+}: ServiceSelectionProps) {
+  const [services, setServices] = useState<Service[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  const categories = [
+    { id: "all", name: "Todos" },
+    { id: "haircut", name: "Cortes" },
+    { id: "beard", name: "Barba" },
+    { id: "combo", name: "Combo" },
+    { id: "other", name: "Outros" },
+  ];
+
+  const filteredServices = services.filter(
+    (service) =>
+      selectedCategory === "all" || service.category === selectedCategory
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Category Filter */}
+      <div className="flex gap-2 flex-wrap">
+        {categories.map((category) => (
+          <Button
+            key={category.id}
+            variant={selectedCategory === category.id ? "default" : "outline"}
+            onClick={() => setSelectedCategory(category.id)}
+            className={
+              selectedCategory === category.id ? "bg-yellow-500 text-black" : ""
+            }
+          >
+            {category.name}
+          </Button>
+        ))}
+      </div>
+
+      {/* Services Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {filteredServices.map((service) => (
+          <div
+            key={service.id}
+            className={cn(
+              "bg-card rounded-lg p-6 border-2 cursor-pointer transition-all hover:shadow-lg",
+              selectedService?.id === service.id
+                ? "border-yellow-500 bg-yellow-500/5"
+                : "border-border hover:border-yellow-500/50",
+              service.isPopular && "border-yellow-500/30"
+            )}
+            onClick={() => onSelect(service)}
+          >
+            {service.isPopular && (
+              <div className="bg-yellow-500 text-black text-xs font-semibold px-2 py-1 rounded-full inline-block mb-3">
+                Mais Popular
+              </div>
+            )}
+
+            <h3 className="font-semibold text-lg mb-2">{service.name}</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              {service.description}
+            </p>
+
+            <div className="flex justify-between items-center">
+              <span className="text-2xl font-bold text-yellow-500">
+                R$ {service.price}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {service.duration}min
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Button onClick={onNext} disabled={!selectedService} className="w-full">
+        Continuar
+      </Button>
+    </div>
+  );
+}
+```
+
+### CalendarComponent
+
+```tsx
+interface CalendarComponentProps {
+  selectedDate: string | null;
+  onSelect: (date: string) => void;
+  availableDates: string[];
+}
+
+export function CalendarComponent({
+  selectedDate,
+  onSelect,
+  availableDates,
+}: CalendarComponentProps) {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const isDateAvailable = (date: Date) => {
+    const dateString = date.toISOString().split("T")[0];
+    return availableDates.includes(dateString);
+  };
+
+  const isDateSelected = (date: Date) => {
+    if (!selectedDate) return false;
+    return date.toISOString().split("T")[0] === selectedDate;
+  };
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  };
+
+  const isPastDate = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  return (
+    <div className="bg-card rounded-lg p-6">
+      <div className="flex items-center justify-between mb-6">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            setCurrentMonth(
+              (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1)
+            )
+          }
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+
+        <h3 className="text-lg font-semibold">
+          {currentMonth.toLocaleDateString("pt-BR", {
+            month: "long",
+            year: "numeric",
+          })}
+        </h3>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            setCurrentMonth(
+              (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1)
+            )
+          }
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-2 mb-4">
+        {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
+          <div
+            key={day}
+            className="text-center text-sm font-medium text-muted-foreground py-2"
+          >
+            {day}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-7 gap-2">
+        {getCalendarDays(currentMonth).map((date, index) => {
+          const isAvailable = isDateAvailable(date);
+          const isSelected = isDateSelected(date);
+          const isTodayDate = isToday(date);
+          const isPast = isPastDate(date);
+
+          return (
+            <button
+              key={index}
+              className={cn(
+                "h-10 w-10 rounded-lg text-sm font-medium transition-colors",
+                isSelected && "bg-yellow-500 text-black",
+                !isSelected &&
+                  isAvailable &&
+                  !isPast &&
+                  "hover:bg-yellow-500/20 text-foreground",
+                !isSelected &&
+                  !isAvailable &&
+                  "text-muted-foreground cursor-not-allowed",
+                !isSelected &&
+                  isPast &&
+                  "text-muted-foreground cursor-not-allowed",
+                isTodayDate && !isSelected && "ring-2 ring-yellow-500/50"
+              )}
+              onClick={() =>
+                isAvailable &&
+                !isPast &&
+                onSelect(date.toISOString().split("T")[0])
+              }
+              disabled={!isAvailable || isPast}
+            >
+              {date.getDate()}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+### TimeSlotGrid
+
+```tsx
+interface TimeSlotGridProps {
+  selectedTime: string | null;
+  onSelect: (time: string) => void;
+  availableSlots: TimeSlot[];
+  selectedDate: string;
+}
+
+export function TimeSlotGrid({
+  selectedTime,
+  onSelect,
+  availableSlots,
+  selectedDate,
+}: TimeSlotGridProps) {
+  const timeSlots = [
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+  ];
+
+  const isSlotAvailable = (time: string) => {
+    return availableSlots.some(
+      (slot) => slot.start === time && slot.isAvailable
+    );
+  };
+
+  const isSlotSelected = (time: string) => {
+    return selectedTime === time;
+  };
+
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">
+        Horários disponíveis para{" "}
+        {new Date(selectedDate).toLocaleDateString("pt-BR")}
+      </h3>
+
+      <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+        {timeSlots.map((time) => {
+          const isAvailable = isSlotAvailable(time);
+          const isSelected = isSlotSelected(time);
+
+          return (
+            <button
+              key={time}
+              className={cn(
+                "h-12 rounded-lg text-sm font-medium transition-colors",
+                isSelected && "bg-yellow-500 text-black",
+                !isSelected &&
+                  isAvailable &&
+                  "bg-card border border-border hover:border-yellow-500 hover:bg-yellow-500/10",
+                !isAvailable &&
+                  "bg-muted text-muted-foreground cursor-not-allowed"
+              )}
+              onClick={() => isAvailable && onSelect(time)}
+              disabled={!isAvailable}
+            >
+              {time}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+## Estados e Validações
+
+### Validação de Agendamento
+
+```typescript
+interface BookingValidation {
+  isValid: boolean;
+  errors: string[];
+}
+
+export function validateBooking(data: Partial<Appointment>): BookingValidation {
+  const errors: string[] = [];
+
+  if (!data.barberId) errors.push("Selecione um barbeiro");
+  if (!data.serviceId) errors.push("Selecione um serviço");
+  if (!data.date) errors.push("Selecione uma data");
+  if (!data.time) errors.push("Selecione um horário");
+
+  // Validar se a data não é no passado
+  if (data.date && new Date(data.date) < new Date()) {
+    errors.push("A data não pode ser no passado");
+  }
+
+  // Validar se o horário está disponível
+  if (data.date && data.time && data.barberId) {
+    // Lógica para verificar disponibilidade
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+}
+```
+
+### Estados de Loading
+
+```tsx
+export function BookingSkeleton() {
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      {/* Progress Bar Skeleton */}
+      <div className="flex items-center justify-between">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="flex items-center">
+            <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
+            {i < 4 && <div className="w-16 h-1 bg-muted mx-2 animate-pulse" />}
+          </div>
+        ))}
+      </div>
+
+      {/* Content Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="bg-card rounded-lg p-6 border border-border animate-pulse"
+          >
+            <div className="bg-muted h-48 rounded-lg mb-4" />
+            <div className="space-y-2">
+              <div className="bg-muted h-4 rounded w-3/4" />
+              <div className="bg-muted h-3 rounded w-1/2" />
+              <div className="bg-muted h-3 rounded w-1/4" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Notificações e Feedback
+
+### Toast Notifications
+
+```tsx
+interface ToastProps {
+  type: "success" | "error" | "warning" | "info";
+  title: string;
+  description?: string;
+  duration?: number;
+}
+
+export function Toast({
+  type,
+  title,
+  description,
+  duration = 5000,
+}: ToastProps) {
+  const icons = {
+    success: CheckCircle,
+    error: XCircle,
+    warning: AlertTriangle,
+    info: Info,
+  };
+
+  const colors = {
+    success: "bg-green-500",
+    error: "bg-red-500",
+    warning: "bg-yellow-500",
+    info: "bg-blue-500",
+  };
+
+  const Icon = icons[type];
+
+  return (
+    <div
+      className={cn(
+        "fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white max-w-sm z-50",
+        colors[type]
+      )}
+    >
+      <div className="flex items-start gap-3">
+        <Icon className="h-5 w-5 mt-0.5 flex-shrink-0" />
+        <div className="flex-1">
+          <h4 className="font-semibold">{title}</h4>
+          {description && (
+            <p className="text-sm opacity-90 mt-1">{description}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Integração com Backend
+
+### API Hooks
+
+```tsx
+// Hook para buscar barbeiros
+export function useBarbers() {
+  const [barbers, setBarbers] = useState<Barber[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchBarbers() {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/barbers");
+        const data = await response.json();
+        setBarbers(data);
+      } catch (err) {
+        setError("Erro ao carregar barbeiros");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBarbers();
+  }, []);
+
+  return { barbers, loading, error };
+}
+
+// Hook para criar agendamento
+export function useCreateAppointment() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const createAppointment = async (
+    appointment: Omit<Appointment, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(appointment),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao criar agendamento");
+      }
+
+      return await response.json();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createAppointment, loading, error };
+}
+```

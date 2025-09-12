@@ -20,3 +20,12 @@ pnpm run dev
 
 
 instalar a biblioteca do shadcn
+ pnpm dlx shadcn@latest init
+
+
+Prompts
+INSTALAR Rules for AI Code Editors for Supabase
+	npx shadcn@latest add https://supabase.com/ui/r/ai-editor-rules.json
+
+
+INSTALAR SISTEMA DE AUTENTICAÇÃO 
