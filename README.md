@@ -5,7 +5,8 @@
 <hr />
 <h1> Observações </h1>
 <p>Login: alunoti@barbers.app   senha: informatica
-<p>Link: https://agendamento-barbearia-qg1d.vercel.app/</p>
+<p>Link Video YouTube: https://github.com/JohnnyMatheus/Agendamento-Barbearia</p>
+<p>Link vercel: https://agendamento-barbearia-qg1d.vercel.app/</p>
 <p>O sistema foi moldado para utilizar o Stripe para receber pagamentos online e presenciais, mas por questão de segurança e para liberar o teste não foi colocado</p>
   
 <hr>
